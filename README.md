@@ -1,6 +1,6 @@
 TABLE OF CONTENTS
 =================
-* What Is PyD3 About?{#lol}
+* What Is PyD3 About?
 * Which ID3 Tags Can Be Treated?
 * Which Operating Systems Are Supported?
 * What I Need To PyD3 My Music Library?
@@ -14,7 +14,7 @@ TABLE OF CONTENTS
 * What Is Next?
 
 
-What Is PyD3 About?{#lol}
+What Is PyD3 About?
 ===================
 **PyD3 is a quick [ID3](http://en.wikipedia.org/wiki/ID3/ "wikipedia/ID3") data management of [MP3](http://en.wikipedia.org/wiki/Mp3/ "wikipedia/MP3") files** which it has been built up into a script process. PyD3 will put your music library into place.
 
