@@ -63,9 +63,9 @@ A couple os Python libraries are required for a PyD3. A possible way to install 
 
 `sudo apt-get install python-mutagen python-imaging`
 
-* Windows: There is no official repository for any Windows Version.
+* Windows: There is no official repository for any Windows version.
 
-Download and install the apropiate Python 2.7+ libraries. [Mutagen](http://code.google.com/p/mutagen/downloads/list/ "code.google.com/mutagen") & [PIL](http://www.pythonware.com/products/pil/ "pythonware.com/pil").
+Download and install the appropriate Python 2.7+ libraries. [Mutagen](http://code.google.com/p/mutagen/downloads/list/ "code.google.com/mutagen") & [PIL](http://www.pythonware.com/products/pil/ "pythonware.com/pil").
     
 Use It: PyD3 Your Music Library (or part of it)
 ----------------------------------------------
