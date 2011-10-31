@@ -27,6 +27,21 @@ class Utils:
         return os.path.basename(file)
         
     
+    def get_bytes_converter(self, bytes):
+        """
+        Get a human readable bits size format from a bunch of bytes
+        
+        Arguments:
+        :param bytes: int
+        
+        :return: string
+        """
+        for type in ['bytes','KB','MB','GB','TB']:
+            if bytes < 1024.0:
+                return "%3.1f %s" % (bytes, type)
+            bytes /= 1024.0
+            
+    
     def get_file_size(self, file):
         """
         Get file size from a filename path into a human readable format.
@@ -36,12 +51,29 @@ class Utils:
         
         :return: string
         """
-        bytes = os.path.getsize(file)
-        for type in ['bytes','KB','MB','GB','TB']:
-            if bytes < 1024.0:
-                return "%3.1f %s" % (bytes, type)
-            bytes /= 1024.0
+        return self.get_bytes_converter(os.path.getsize(file))
+    
+    
+    def get_dir_size(self, the_path, tree=False):
+        """
+        Get the total size of the directory and its files.
+
+        Also, it can return the total size of the directory --with its directiores 
+        and files on a recursive mode--. See optional "tree" param.
         
+        Arguments:
+        :param the_path: string e.g.: /path/to/get/its/size/
+        :param tree: boolean -- True if you want to get size of a directory tree otherwise False
+        
+        :return: string
+        """
+        path_size = 0
+        for path, dirs, files in os.walk(the_path):
+            for file in files:
+                path_size += os.path.getsize(os.path.join(path, file))
+            if tree is False: return self.get_bytes_converter(path_size)
+        return self.get_bytes_converter(path_size)
+    
     
     def get_file_mimetype(self, file):
         """
@@ -825,7 +857,11 @@ class Typewriter:
         return "%s" %(', '.join(fnc(f) for f in files))
     
     def print_dir_info(self, folder_summary):
-        print unicoder("%s (%s)" %(unicoder(self.get_text_source_path_is()), self.get_text_n_tunes(folder_summary['files']['tune'])))
+        print unicoder("%s (%s) [%s]" %(
+            unicoder(self.get_text_source_path_is()), 
+            self.get_text_n_tunes(folder_summary['files']['tune']),
+            self.get_dir_size(self.paths['source_path']))
+        )
         print unicoder(self.get_text_line_block())
         print unicoder(self.get_text_line_block("AUDIO DATA"))
         print unicoder(self.get_text_tunes_audio(folder_summary['audio']))
