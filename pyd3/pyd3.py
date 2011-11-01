@@ -795,7 +795,7 @@ class Process:
 class Typewriter:
     
     def clean_screen(self):
-        """Clean terminal screean --whatever OS is."""
+        """Clean screen terminal --whatever OS is."""
         screaner.screaner()
     
     def get_text_line_block(self, title=""):
