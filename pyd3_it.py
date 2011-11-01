@@ -61,8 +61,8 @@ for (path, dirs, files) in os.walk(main_source_path):
             [6] Add apic images (they will be attached to every tune).
             [7] Consider non expected files to be copied on target directory (Exclude/Include).
             [8] List empty id3 tags for each file.
-            [9] Skip album folder.
-            [0] Exit.
+            [0] Skip album folder.
+            [X] Exit.
             >> """))
         
         case = {
@@ -74,12 +74,12 @@ for (path, dirs, files) in os.walk(main_source_path):
             '6': pyd3.edit_apic_images,
             '7': pyd3.edit_non_expected_files,
             '8': pyd3.list_empty_tags,
-            '9': pyd3.skip_folder_data,
-            '0': pyd3.exit
+            '0': pyd3.skip_folder_data,
+            'x': pyd3.exit
         }
         
         try:
-            case[option]()
+            case[option.lower()]()
         except KeyError:
             raw_input("__INVALID_OPTION__ [%s]... Press a KEY to continue. " %(option))
         
