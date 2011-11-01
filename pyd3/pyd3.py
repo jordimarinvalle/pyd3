@@ -131,7 +131,6 @@ class Audio:
         
         :return: dictionary -- dictionary with data for each key
         """
-        warnings = []
         audio_flattened = {}
         for tune in tunes_data:
             empty_tags = []
@@ -176,7 +175,7 @@ class Id3:
         
         :return: dictionary -- dictionary with data for each key (id3 tag)
         """
-        id3_flattened = {}
+        id3_flattened = {'warnings': {}}
         for tune in tunes_data:
             empty_tags = []
             for tag, id3_object in tune['id3'].iteritems():
@@ -187,6 +186,8 @@ class Id3:
                     id3_flattened[tag] = [id3_object]
                 elif id3_object not in id3_flattened[tag] and id3_object is not None:
                     id3_flattened[tag].append(id3_object)
+            if empty_tags: 
+                id3_flattened['warnings'][tune['filename']['source']] = empty_tags
         return id3_flattened
         
     
@@ -249,6 +250,7 @@ class Id3:
         """
         try: id3g.save_id3_data(tune_file, id3, apic_images)
         except Exception, e: raise PyD3Error(e)
+        
     
     def get_folder_summary(self, tunes):
         """
@@ -270,7 +272,14 @@ class Id3:
             'path' : {'source_dir': self.paths['source_dir'], 'target_dir': self.paths['target_dir']},
             'non_expected_files': self.non_expected_files
         }
+        
     
+    def list_empty_tags(self):
+        if not self.flattened_data['id3']['warnings']: return raw_input("[ii] All ID3 tags has a value. None is empty.")
+        for file in self.flattened_data['id3']['warnings']:
+            print "ID3 tag(s) %s has not a value on %s file" %(', '.join(self.flattened_data['id3']['warnings'][file]), unicoder(os.path.basename(file)))
+        return raw_input("Press a KEY to continue.")
+
 
 class Image:
     
@@ -869,6 +878,9 @@ class Typewriter:
         print unicoder(self.get_text_line_block("ID3 DATA"))
         print unicoder(self.get_text_tunes_id3(folder_summary['id3']))
         print unicoder(self.get_text_line_block())
+        if folder_summary['id3']['warnings']:
+            print unicoder(self.get_text_line_block("ID3 DATA HAS WARNINGS!!!"))
+            print unicoder(self.get_text_line_block())
         print unicoder(self.get_text_line_block("ATTACHED IMAGES (ID3)"))
         print unicoder(self.get_text_attached_images(folder_summary['image']))
         print unicoder(self.get_text_line_block())

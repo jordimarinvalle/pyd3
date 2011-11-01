@@ -52,7 +52,7 @@ for (path, dirs, files) in os.walk(main_source_path):
         pyd3.print_skip_text()
         
         option = raw_input(dedent("""\
-            [1] Above info is OK.
+            [1] Above info is OK. Go ahead and PyD3 it!
             [2] Edit target folder directory name.
             [-] Edit ID3 tune(s) tags data for:
                 [3] Select id3 tag(s) and values to update all tunes by one shot.
@@ -60,7 +60,8 @@ for (path, dirs, files) in os.walk(main_source_path):
                 [5] List tune filenames, view and edit a specific tune.
             [6] Add apic images (they will be attached to every tune).
             [7] Consider non expected files to be copied on target directory (Exclude/Include).
-            [8] Skip album folder.
+            [8] List empty id3 tags for each file.
+            [9] Skip album folder.
             [0] Exit.
             >> """))
         
@@ -72,7 +73,8 @@ for (path, dirs, files) in os.walk(main_source_path):
             '5': pyd3.edit_a_tune_from_a_list_of_tunes,
             '6': pyd3.edit_apic_images,
             '7': pyd3.edit_non_expected_files,
-            '8': pyd3.skip_folder_data,
+            '8': pyd3.list_empty_tags,
+            '9': pyd3.skip_folder_data,
             '0': pyd3.exit
         }
         
