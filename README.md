@@ -16,7 +16,7 @@ TABLE OF CONTENTS
 
 What Is PyD3 About?
 ===================
-**PyD3 is a quick [ID3](http://en.wikipedia.org/wiki/ID3/ "wikipedia/ID3") data management of [MP3](http://en.wikipedia.org/wiki/Mp3/ "wikipedia/MP3") files** which it has been built up into a script process. PyD3 will put your music library into place.
+**PyD3 is a quick [ID3](http://en.wikipedia.org/wiki/ID3 "wikipedia/ID3") data management of [MP3](http://en.wikipedia.org/wiki/Mp3 "wikipedia/MP3") files** which it has been built up into a script process. PyD3 will put your music library into place.
 
 
 Which ID3 Tags Can Be Treated?
@@ -47,7 +47,7 @@ To PyD3 your music library, or just a simple folder, you must have the following
 Python Installation
 -------------------
 Most of Operating Systems such as OS-X and GNU/Linux distributions come with a preinstalled version of Python. Check Python version on your shell terminal application. `$ python -V`
-If you are on Windows you will need to install it from [www.python.org](http://www.python.org/ "http://www.python.org").
+If you are on Windows you will need to install it from [www.python.org](http://www.python.org "http://www.python.org").
 
 **Note: Do not install Python 3+.**
 
@@ -65,7 +65,7 @@ A couple os Python libraries are required for a PyD3. A possible way to install 
 
 * Windows: There is no official repository for any Windows version.
 
-Download and install the appropriate Python 2.7+ libraries. [Mutagen](http://code.google.com/p/mutagen/downloads/list/ "code.google.com/mutagen") & [PIL](http://www.pythonware.com/products/pil/ "pythonware.com/pil").
+Download and install the appropriate Python 2.7+ libraries. [Mutagen](http://code.google.com/p/mutagen/downloads/list "code.google.com/mutagen") & [PIL](http://www.pythonware.com/products/pil "pythonware.com/pil").
     
 Use It: PyD3 Your Music Library (or part of it)
 ----------------------------------------------
