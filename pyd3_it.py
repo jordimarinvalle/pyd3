@@ -99,7 +99,7 @@ for (path, dirs, files) in os.walk(main_source_path):
         pyd3.process_tunes(pyd3.tunes, trackn_max_digits, pyd3.paths['target_path'], pyd3.apic_images)
         pyd3.process_apic_images(pyd3.apic_images, pyd3.paths['target_path'])
         pyd3.process_non_expected_files(pyd3.non_expected_files, pyd3.paths['target_path'])
-    except PyD3Error as e: 
+    except PyD3Error as e:
         print "[ee] %s" %(unicoder(e.msg))
     pyd3.print_source_path_was()
 

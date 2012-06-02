@@ -10,8 +10,10 @@ from unicoder import unicoder
 from slugy import slugy
 import screaner
 import dragger
-import id3gateway as id3g
+#import id3gateway as id3g
 import audiogateway as audiog
+from id3gateway import Id3Gw
+
 
 class Utils:
     
@@ -162,7 +164,7 @@ class Id3:
         return {
             'filename': {'source': mp3_file},
             'audio': audiog.get_audio_tune(mp3_file),
-            'id3': id3g.get_id3_tune(mp3_file)
+            'id3': Id3Gw(mp3_file)
         }
         
     
@@ -178,7 +180,7 @@ class Id3:
         id3_flattened = {'warnings': {}}
         for tune in tunes_data:
             empty_tags = []
-            for tag, id3_object in tune['id3'].iteritems():
+            for tag, id3_object in tune['id3'].get_id3().iteritems():
                 if not str(id3_object) and tag is not 'band':
                     empty_tags.append(tag)
                     continue
@@ -233,9 +235,10 @@ class Id3:
         :return tunes_data: dictionary -- dictionary updated
         """
         for i, tune in enumerate(tunes_data):
-            tunes_data[i]['id3']['band'] = id3g.set_band(value)
+            tune['id3'].set_band(value)
+            tunes_data[i]['id3'] = tune['id3']
         return tunes_data
-        
+
     
     def save_id3_data(self, tune_file, id3, apic_images):
         """
@@ -248,10 +251,14 @@ class Id3:
         
         :return: boolean
         """
-        try: id3g.save_id3_data(tune_file, id3, apic_images)
-        except Exception, e: raise PyD3Error(e)
-        
-    
+        for key in apic_images.keys():
+            if apic_images[key] is None: continue
+            id3.set_picture(apic_images[key]['file'], apic_images[key]['apictype'])
+
+        try: id3.save(tune_file)
+        except Exception, e: pass
+
+
     def get_folder_summary(self, tunes):
         """
         Get a "summary" of the data processed.
@@ -444,11 +451,11 @@ class Filename:
         :return: string
         """
         filename_name, filename_ext = os.path.basename(os.path.splitext(filename)[0]), os.path.splitext(filename)[1]
-        (trackn, artist, title) = (id3.get('trackn', []), id3.get('artist', []), id3.get('title', []))
+        (trackn, artist, title) = (id3.get_trackn(), id3.get_artist(), id3.get_title())
                 
-        if trackn[0] and artist[0] and title[0]:
+        if trackn and artist and title:
             filename_name = "%s %s - %s" %(self.get_trackn_padded(trackn, trackn_max_digits), artist, title)
-        elif artist[0] and title[0]:
+        elif artist and title:
             filename_name = "%s - %s" %(artist, title)
         return "%s%s" %(slugy(filename_name, "_"), filename_ext)
         
@@ -659,8 +666,8 @@ class Edit:
             tag_value = self.prompt_get_id3_tag_value(tag)
             if tag_value == self.skip_key: return
             for i, tune in enumerate(self.tunes):
-                self.tunes[i]['id3'][tag] = id3g.set_id3_tag_tune(tag, tag_value)
-    
+                tune['id3'].set_id3_tag_tune(tag, tag_value)
+                self.tunes[i]['id3'] = tune['id3']
     
     def edit_tune_by_tune(self):
         """"
@@ -674,9 +681,10 @@ class Edit:
             for tag in option_tags:
                 tag_value = self.prompt_get_id3_tag_value(tag)
                 if tag_value == self.skip_key: return
-                self.tunes[i]['id3'][tag] = id3g.set_id3_tag_tune(tag, tag_value)
-    
-    
+                tune['id3'].set_id3_tag_tune(tag, tag_value)
+                self.tunes[i]['id3'] = tune['id3']
+
+
     def edit_a_tune_from_a_list_of_tunes(self):
         """
         Promt user with a list of tunes, with the following format.
@@ -710,9 +718,10 @@ class Edit:
         option_tags = self.prompt_get_id3_tag()
         for tag in option_tags:
             tag_value = self.prompt_get_id3_tag_value(tag)
-            self.tunes[i]['id3'][tag] = id3g.set_id3_tag_tune(tag, tag_value)
-    
-    
+            self.tunes[i]['id3'].set_id3_tag_tune(tag, tag_value)
+            self.tunes[i]['id3'] = self.tunes[i]['id3']
+
+
     def edit_apic_images(self):
         """
         -- Edit apic images. --
@@ -773,12 +782,10 @@ class Process:
         for tune in tunes:
             target_filename = self.get_tunned_filename(tune['filename']['source'], tune['id3'], trackn_max_digits)
             tune['filename']['target'] = os.path.abspath(os.path.join(target_path, target_filename))
-            try:
-                self.copy_file(tune['filename']['source'], tune['filename']['target'])
-                self.save_id3_data(tune['filename']['target'], tune['id3'], apic_images)
-                print "[ii] tune %s was processed correctly." %(unicoder(os.path.basename(tune['filename']['source'])))
-            except PyD3Error as e:
-                print "[ee] %s" %(unicoder(e.msg))
+            self.copy_file(tune['filename']['source'], tune['filename']['target'])
+            self.save_id3_data(tune['filename']['target'], tune['id3'], apic_images)
+            print "[ii] tune %s was processed correctly." %(unicoder(os.path.basename(tune['filename']['source'])))
+
     
     def process_apic_images(self, apic_images, target_path):
         for key in apic_images.keys():
@@ -917,7 +924,7 @@ class Typewriter:
     
     def print_tune_info(self, tune_data, image=None):
         print unicoder(self.get_text_tune_filename(tune_data['filename']['source']))
-        print unicoder(self.get_text_tune_id3(tune_data['id3']))
+        print unicoder(self.get_text_tune_id3(tune_data['id3'].get_id3()))
         print unicoder(self.get_text_attached_images(image))
         
     def print_tune_short_summary(self, tune):
