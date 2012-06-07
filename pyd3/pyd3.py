@@ -916,10 +916,10 @@ class Typewriter:
     def get_text_short_tune_summary(self, tune):
         return "[FILENAME: %s] | [TRACKN#: %s] | [ARTIST: %s] | [ALBUM: %s] | [TITLE: %s]" %(
             os.path.basename(tune['filename'].get('source', '')), 
-            tune['id3'].get('trackn', ''), 
-            tune['id3'].get('artist', ''), 
-            tune['id3'].get('album', ''), 
-            tune['id3'].get('title', ''), 
+            tune['id3'].get_id3().get('trackn', ''),
+            tune['id3'].get_id3().get('artist', ''),
+            tune['id3'].get_id3().get('album', ''),
+            tune['id3'].get_id3().get('title', ''),
         )
     
     def print_tune_info(self, tune_data, image=None):
