@@ -180,14 +180,14 @@ class Id3:
         id3_flattened = {'warnings': {}}
         for tune in tunes_data:
             empty_tags = []
-            for tag, id3_object in tune['id3'].get_id3().iteritems():
-                if not id3_object and tag is not 'band':
+            for tag, value in tune['id3'].get_id3().iteritems():
+                if not value and tag is not 'band':
                     empty_tags.append(tag)
                     continue
                 if not id3_flattened.has_key(tag):
-                    id3_flattened[tag] = [id3_object]
-                elif id3_object not in id3_flattened[tag] and id3_object is not None:
-                    id3_flattened[tag].append(id3_object)
+                    id3_flattened[tag] = [value]
+                elif value not in id3_flattened[tag] and value is not None:
+                    id3_flattened[tag].append(value)
             if empty_tags: 
                 id3_flattened['warnings'][tune['filename']['source']] = empty_tags
         return id3_flattened
@@ -251,6 +251,7 @@ class Id3:
         
         :return: boolean
         """
+        id3.id3 = self.delete_id3_data(id3.id3, ('APIC', 'TCOP'))
         for key in apic_images.keys():
             if apic_images[key] is None: continue
             id3.set_picture(apic_images[key]['file'], apic_images[key]['apictype'])
@@ -258,6 +259,19 @@ class Id3:
         try: id3.save(tune_file)
         except Exception, e: pass
 
+    def delete_id3_data(self, id3, keys):
+        """
+        Delete ID3 keys.
+
+        Arguments:
+        :param id3: Mutagen object
+        :param keys: tuple with ID3 Mutagen Keys
+
+        :return: object
+        """
+        for key in keys:
+            id3.delall(key)
+        return id3
 
     def get_folder_summary(self, tunes):
         """
