@@ -181,7 +181,7 @@ class Id3:
         for tune in tunes_data:
             empty_tags = []
             for tag, id3_object in tune['id3'].get_id3().iteritems():
-                if not str(id3_object) and tag is not 'band':
+                if not id3_object and tag is not 'band':
                     empty_tags.append(tag)
                     continue
                 if not id3_flattened.has_key(tag):
