@@ -5,9 +5,12 @@ life easier and a more readable code.
 Abstract Mutagen layer for ID3 data management.
 """
 import os
+import sys
 import mimetypes
 
 from mutagen.id3 import ID3, TRCK, TALB, TPE1, TPE2, TIT2, TCON, TDRC, COMM, APIC
+
+stdout_encoding = sys.stdout.encoding
 
 class Id3Gw():
 
@@ -84,7 +87,7 @@ class Id3Gw():
         Arguments:
         :param value: string -- value to set on mutagen object
         """
-        self.id3.add(TRCK(encoding=3, text=value))
+        self.id3.add(TRCK(encoding=3, text=value.decode(stdout_encoding)))
 
 
     def set_album(self, value):
@@ -94,7 +97,7 @@ class Id3Gw():
         Arguments:
         :param value: string -- value to set on mutagen object
         """
-        self.id3.add(TALB(encoding=3, text=value))
+        self.id3.add(TALB(encoding=3, text=value.decode(stdout_encoding)))
 
 
     def set_artist(self, value):
@@ -104,7 +107,7 @@ class Id3Gw():
         Arguments:
         :param value: string -- value to set on mutagen object
         """
-        self.id3.add(TPE1(encoding=3, text=value))
+        self.id3.add(TPE1(encoding=3, text=value.decode(stdout_encoding)))
 
 
     def set_band(self, value):
@@ -114,7 +117,7 @@ class Id3Gw():
         Arguments:
         :param value: string -- value to set on mutagen object
         """
-        self.id3.add(TPE2(encoding=3, text=value))
+        self.id3.add(TPE2(encoding=3, text=value.decode(stdout_encoding)))
 
 
     def set_title(self, value):
@@ -124,7 +127,7 @@ class Id3Gw():
         Arguments:
         :param value: string -- value to set on mutagen object
         """
-        self.id3.add(TIT2(encoding=3, text=value))
+        self.id3.add(TIT2(encoding=3, text=value.decode(stdout_encoding)))
 
 
     def set_genre(self, value):
@@ -134,7 +137,7 @@ class Id3Gw():
         Arguments:
         :param value: string -- value to set on mutagen object
         """
-        self.id3.add(TCON(encoding=3, text=value))
+        self.id3.add(TCON(encoding=3, text=value.decode(stdout_encoding)))
 
 
     def set_year(self, value):
@@ -144,7 +147,7 @@ class Id3Gw():
         Arguments:
         :param value: string -- value to set on mutagen object
         """
-        self.id3.add(TDRC(encoding=3, text=value))
+        self.id3.add(TDRC(encoding=3, text=value.decode(stdout_encoding)))
 
 
     def set_comment(self, text):
@@ -158,7 +161,7 @@ class Id3Gw():
         """
         text = 'Add PyD3 into your life.'
         desc = 'PyD3'
-        self.id3.add(COMM(encoding=3, text=value), desc=desc)
+        self.id3.add(COMM(encoding=3, text=value.decode(stdout_encoding)), desc=desc)
 
 
     def set_picture(self, f, type, encoding=3):
