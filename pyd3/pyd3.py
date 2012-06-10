@@ -646,11 +646,10 @@ class Prompter:
         
         :return: raw input waiting for a user option.
         """
-        a= unicoder(raw_input(textwrap.dedent("""\
+        return raw_input(textwrap.dedent("""\
             Write a ID3 (%s) tag value. 
-            >>> """) %(tag)))
-        raw_input(a)
-        return a
+            >>> """) %(tag))
+
 
 class Edit:
     
