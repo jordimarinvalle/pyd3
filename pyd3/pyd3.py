@@ -546,13 +546,13 @@ class Directory:
         :return: string
         """
         (artist, album, genre) = (id3.get('artist', ('',))[0], id3.get('album', ('',))[0], id3.get('genre', ('',))[0])
-        
+
         if album and artist and is_a_va_album is False:
             directory = "%s - %s" %(artist, album)
         elif album and is_a_va_album is True:
             directory = "%s" %(album)
         
-        if 'soundtrack' in str(genre).lower():
+        if 'soundtrack' in genre.lower():
             directory = "OST - %s" %(directory)
         
         return slugy(directory, ' ', False)
@@ -646,10 +646,11 @@ class Prompter:
         
         :return: raw input waiting for a user option.
         """
-        return raw_input(textwrap.dedent("""\
+        a= unicoder(raw_input(textwrap.dedent("""\
             Write a ID3 (%s) tag value. 
-            >>> """) %(tag))
-    
+            >>> """) %(tag)))
+        raw_input(a)
+        return a
 
 class Edit:
     
