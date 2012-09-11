@@ -723,8 +723,37 @@ class Edit:
                 raw_input("__INVALID_OPTION__ [%s]... Press a KEY to continue. " %(op))
             
         self.edit_a_tune(i)
-    
-    
+
+    def capitalize_tunes(self):
+        """
+        Capitalize id3 tag tune values
+        -- List tune filenames, view and edit a specific tune. --
+        """
+        option_tags = self.prompt_get_id3_tag()
+        for tag in option_tags:
+            for (i, tune) in enumerate(self.tunes, 0):
+                print tune.get('id3').get_id3()[tag]
+                s = self.filter_title(tune.get('id3').get_id3()[tag].title())
+                search_and_replace = {'feat.': ('Featuring', 'Ft.', 'Ft', 'Feat_', 'Feat.')}
+                for replace_with, search_tags in search_and_replace.iteritems():
+                    for search_tag in search_tags:
+                        if search_tag in s:
+                            s = s.replace(search_tag, replace_with)
+                            break
+                self.tunes[i]['id3'].set_id3_tag_tune(tag, s)
+
+
+    def filter_title(self, s):
+        if s.find("'") is  -1:
+            return s
+        a = s.find("'")
+        b = s[a:]
+        c = b.find(" ")
+
+        x = b[:c]
+        return s.replace(x, x.lower())
+
+
     def edit_a_tune(self, i):
         """
         Prompt user to edit a ID3 tune data.
