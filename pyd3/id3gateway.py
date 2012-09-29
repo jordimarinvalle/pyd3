@@ -8,7 +8,7 @@ import os
 import sys
 import mimetypes
 
-from mutagen.id3 import ID3, TRCK, TALB, TPE1, TPE2, TIT2, TCON, TDRC, COMM, APIC
+from mutagen.id3 import ID3, TRCK, TALB, TPE1, TPE2, TIT2, TCON, TDRC, COMM, TCMP, APIC
 
 stdout_encoding = sys.stdout.encoding
 
@@ -53,7 +53,7 @@ class Id3Gw():
         """
         Get basic ID3 data.
 
-        :return: dictionary with basic ID3 data such as trackn, album, artist, title, genre, year, comment, band.
+        :return: dictionary with basic ID3 data such as trackn, album, artist, title, genre, year, comment, band, compilation.
         """
         return {
             'trackn': self.get_trackn(),
@@ -64,6 +64,7 @@ class Id3Gw():
             'year': self.get_year(),
             'comment': self.get_comment(),
             'band': self.get_band(),
+            'compilation': self.get_compilation(),
             }
 
     def set_id3_tag_tune(self, id3_tag, id3_tag_value):
@@ -76,6 +77,7 @@ class Id3Gw():
             'genre' : self.set_genre,
             'year' : self.set_year,
             'comment': self.set_comment,
+            'compilation': self.set_compilation,
             }
         case[id3_tag](id3_tag_value)
 
@@ -117,7 +119,20 @@ class Id3Gw():
         Arguments:
         :param value: string -- value to set on mutagen object
         """
+        if value is "VA":
+            self.set_compilation("1")
         self.id3.add(TPE2(encoding=3, text=value.decode(stdout_encoding)))
+
+
+
+    def set_compilation(self, value):
+        """
+        TPE2 Compilation.
+
+        Arguments:
+        :param value: string -- value to set on mutagen object
+        """
+        self.id3.add(TCMP(encoding=3, text=value.decode(stdout_encoding)))
 
 
     def set_title(self, value):
@@ -236,7 +251,18 @@ class Id3Gw():
 
         :return: unicode band
         """
+        #if value is "VA":
+        #    self.set_compilation("1")
         return unicode(self.id3.get('TPE2', ''))
+
+
+    def get_compilation(self):
+        """
+        Get TCMP Compilation from a ID3.
+
+        :return: unicode compilation
+        """
+        return unicode(self.id3.get('TCMP', ''))
 
 
     def get_title(self):

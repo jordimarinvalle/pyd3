@@ -58,6 +58,7 @@ for (path, dirs, files) in os.walk(main_source_path):
                 [3] Select id3 tag(s) and values to update all tunes by one shot.
                 [4] Select id3 tag(s), and then tune by tune add value(s) for the selected id3 tag(s).
                 [5] List tune filenames, view and edit a specific tune.
+            [VA] Set/Unset tunes as a VA Compilation.
             [C] Capitalize all id3 tag tune values.
             [6] Add apic images (they will be attached to every tune).
             [7] Consider non expected files to be copied on target directory (Exclude/Include).
@@ -72,6 +73,7 @@ for (path, dirs, files) in os.walk(main_source_path):
             '3': pyd3.edit_all_tunes,
             '4': pyd3.edit_tune_by_tune,
             '5': pyd3.edit_a_tune_from_a_list_of_tunes,
+            'va': pyd3.va_compilation_tunes,
             'c': pyd3.capitalize_tunes,
             'C': pyd3.capitalize_tunes,
             '6': pyd3.edit_apic_images,

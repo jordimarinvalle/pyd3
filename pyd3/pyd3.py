@@ -181,7 +181,7 @@ class Id3:
         for tune in tunes_data:
             empty_tags = []
             for tag, value in tune['id3'].get_id3().iteritems():
-                if not value and tag is not 'band':
+                if not value and tag is not 'band' and tag is not 'compilation':
                     empty_tags.append(tag)
                     continue
                 if not id3_flattened.has_key(tag):
@@ -208,8 +208,8 @@ class Id3:
             if tune['id3']['artist'] not in artist:
                 artist.append(tune['id3']['artist'])
         return True if len(artist) > 1 else False
-        
-    
+
+
     def get_band_tag_value_attr(self, is_a_va_album=False):
         """
         Get value attribute band for various artists tunes collection.
@@ -551,10 +551,7 @@ class Directory:
             directory = "%s - %s" %(artist, album)
         elif album and is_a_va_album is True:
             directory = "%s" %(album)
-        
-        if 'soundtrack' in genre.lower():
-            directory = "OST - %s" %(directory)
-        
+
         return slugy(directory, ' ', False)
         
 
@@ -724,6 +721,28 @@ class Edit:
             
         self.edit_a_tune(i)
 
+    def va_compilation_tunes(self):
+        """
+        """
+        op = raw_input(textwrap.dedent("""\
+                    [S]et or [U]nset? >> """))
+
+        if op == self.skip_key: return
+        if op not in ('s', 'u'): return
+
+        if op.lower() == 's':
+            band_tag_value = "VA"
+            compilation_tag_value = "1"
+
+        if op.lower() == 'u':
+            band_tag_value = ""
+            compilation_tag_value = ""
+
+        for i, tune in enumerate(self.tunes):
+            tune['id3'].set_id3_tag_tune('band', band_tag_value)
+            tune['id3'].set_id3_tag_tune('compilation', compilation_tag_value)
+            self.tunes[i]['id3'] = tune['id3']
+
     def capitalize_tunes(self):
         """
         Capitalize id3 tag tune values
@@ -734,13 +753,22 @@ class Edit:
             for (i, tune) in enumerate(self.tunes, 0):
                 #print tune.get('id3').get_id3()[tag]
                 s = self.filter_title(tune.get('id3').get_id3()[tag].title())
-                search_and_replace = {'feat.': ('Featuring', 'Ft.', 'Ft', 'Feat_', 'Feat.', 'Feat')}
+                search_and_replace = {
+                    'feat.': ('Featuring', 'Ft.', 'Ft', 'Feat_', 'Feat.', 'Feat',),
+                    'with': ('With', 'Wt.',)
+                }
                 for replace_with, search_tags in search_and_replace.iteritems():
                     for search_tag in search_tags:
                         if search_tag in s:
+                            """
+                            ok = raw_input("Its 'ok'? tag: %s, string: %s >> " %(replace_with, tune.get('id3').get_id3()[tag]))
+                            if (ok is 'ok'):
+                                s = s.replace(search_tag, replace_with)
+                                break
+                            """
                             s = s.replace(search_tag, replace_with)
                             break
-                self.tunes[i]['id3'].set_id3_tag_tune(tag, s.encode('utf-8'))
+                        self.tunes[i]['id3'].set_id3_tag_tune(tag, s.encode('utf-8'))
 
 
     def filter_title(self, s):
@@ -885,6 +913,7 @@ class Typewriter:
         l.append("Title : %s" %(t2s(id3.get('title',  ('',)))))
         l.append("Genre : %s" %(t2s(id3.get('genre',  ('',)))))
         l.append("Year  : %s" %(t2s(id3.get('year',   ('',)))))
+        l.append("Compilation: %s" %(t2s(id3.get('compilation',   ('',)))))
         return os.linesep.join(l)
     
     def get_text_attached_images(self, images):
